@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>My AngularJS App</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">-->
+  <!--<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">-->
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <!--<script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>-->
+  <style>
+    .container{
+      margin-top:20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" ng-controller="myController">
+    <!------------------导航切换框------------------------->
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: activeTab=='inbox'}"><a href="javascript:;" ng-click="activeTab='inbox'">收件箱</a></li>
+      <li ng-class="{active: activeTab=='sent'}"><a href="javascript:;" ng-click="activeTab='sent'">发件箱</a></li>
+    </ul>
+    <br>
+    <!-------------------收件箱内容------------------------>
+    <table class="table table-bordered table-condensed" ng-show="activeTab=='inbox'">
+      <tbody>
+      <!--<tr ng-repeat="detail in emails"  ng-click="showPopup()">-->
+      <tr ng-repeat="detail in emails"  data-toggle="modal" data-target="#myModal"
+          ng-click="showPopup(detail)">
+        <td ng-bind="$index+1"></td>
+        <td ng-bind="detail.from"></td>
+        <td ng-bind="detail.subject"></td>
+        <td ng-bind="detail.date"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!---------------------发件箱内容----------------------->
+    <table class="table table-bordered table-condensed"
+           ng-show="activeTab=='sent'">
+      <tbody>
+      <tr ng-repeat="detail in sentEmails" ng-click="showPopup(detail)"
+          data-toggle="modal" data-target="#myModal">
+        <td ng-bind="$index+1"></td>
+        <td ng-bind="detail.to"></td>
+        <td ng-bind="detail.subject"></td>
+        <td ng-bind="detail.date | date:'yyyy-MM-dd'"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!---------------邮件详情---------------------->
+    <div class="modal fade" id="myModal" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel"> <strong>主题:</strong>{{selectEmail.subject}}</h4>
+          </div>
+          <div class="modal-body">
+            <strong>发件人：</strong>{{selectEmail.from}} <br>
+            <strong>收件人：</strong> {{selectEmail.to}}<br />
+            <strong>日期：</strong>{{selectEmail.date | date:'yyyy-MM-dd' }}<br>
+            <br>
+            <p style="white-space:pre">{{selectEmail.body}}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" ng-click="forward()">转发</button>
+            <button type="button" class="btn btn-info" ng-click="reply()">回复</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-------------------写信按钮-------------------------------------------->
+    <button class="btn btn-primary " ng-click="showWritePopup()" data-toggle="modal" data-target="#myModal2">写信</button>
+
+    <!----------------
+    邮件----------------------------------->
+    <div class="modal fade" id="myModal2"  >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            <h3>写信</h3>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <input class="form-control" type="text" placeholder="发送到：" style="width:95%"
+                       ng-model="writeEmail.to"> <br>
+                <input class="form-control" type="text" placeholder="主题：" style="width:95%"
+                        ng-model="writeEmail.subject"> <br>
+                <textarea class="form-control" cols="30" rows="10" style="width:95%"
+                          placeholder="邮件内容..." ng-model="writeEmail.body"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"
+                        ng-click="closeWritePopup()">关闭</button>
+            <button type="button" class="btn btn-primary" ng-click="sendEmail()" data-dismiss="modal">发送</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script src="js/jquery-1.11.3.js"></script>
+  <script src="js/angular.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/app.js"></script>
+  <!--<script src="components/version/version.js"></script>-->
+  <!--<script src="components/version/version-directive.js"></script>-->
+  <!--<script src="components/version/interpolate-filter.js"></script>-->
+</body>
+</html>
